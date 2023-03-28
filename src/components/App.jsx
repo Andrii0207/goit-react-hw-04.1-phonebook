@@ -6,10 +6,9 @@ import Filter from './Filter/Filter';
 
 export const App = () => {
   const [contacts, setContacts] = useState(() => {
-    const contactsLocalStorage = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contactsLocalStorage);
+    const contactsLocalStorage = JSON.parse(localStorage.getItem('contacts'));
     return (
-      parsedContacts ?? [
+      contactsLocalStorage ?? [
         { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
         { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
         { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
@@ -36,18 +35,20 @@ export const App = () => {
     });
   };
 
-  const addContact = ({ name, number }) => {
+  console.log('contacts', contacts);
+
+  const addContact = (name, number) => {
     const newContact = {
       id: nanoid(),
       name,
       number,
     };
 
-    contacts.find(
-      contact => newContact.name.toLowerCase() === contact.name.toLowerCase()
+    return contacts.find(
+      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     )
       ? alert(`${name} is already in contacts`)
-      : setContacts(prevState => [newContact, ...prevState]);
+      : setContacts(() => [newContact, ...contacts]);
   };
 
   const deleteContact = id => {
